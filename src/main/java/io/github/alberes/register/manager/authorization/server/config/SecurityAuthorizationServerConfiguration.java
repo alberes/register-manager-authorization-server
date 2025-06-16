@@ -1,0 +1,178 @@
+package io.github.alberes.register.manager.authorization.server.config;
+
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.RSAKey;
+import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
+import com.nimbusds.jose.jwk.source.JWKSource;
+import com.nimbusds.jose.proc.SecurityContext;
+import io.github.alberes.register.manager.authorization.server.constants.Constants;
+import io.github.alberes.register.manager.authorization.server.domains.UserPrincipal;
+import io.github.alberes.register.manager.authorization.server.services.UserPrincipalDetailsService;
+import io.github.alberes.register.manager.authorization.server.utils.KeyTools;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
+import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.JwtClaimsSet;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
+import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
+import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
+import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
+import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
+import org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat;
+import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
+import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
+import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
+
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
+import java.time.Duration;
+import java.time.format.DateTimeFormatter;
+import java.util.UUID;
+
+@Configuration
+@EnableWebSecurity
+@RequiredArgsConstructor
+@Slf4j
+public class SecurityAuthorizationServerConfiguration {
+
+    private final KeyTools keyTools;
+
+    private final DateTimeFormatter formatter;
+
+    //https://docs.spring.io/spring-authorization-server/reference/protocol-endpoints.html
+    @Bean
+    @Order(1)
+    public SecurityFilterChain securityAuthorizationServer(HttpSecurity httpSecurity) throws Exception {
+        OAuth2AuthorizationServerConfigurer oAuth2AuthorizationServerConfigurer
+                = OAuth2AuthorizationServerConfigurer.authorizationServer();
+        httpSecurity
+                .securityMatcher(oAuth2AuthorizationServerConfigurer.getEndpointsMatcher())
+                .with(oAuth2AuthorizationServerConfigurer, (authorizationServer) ->
+                        authorizationServer.oidc(Customizer.withDefaults()))
+                .authorizeHttpRequests((authorize) ->
+                        authorize.anyRequest().authenticated())
+                .exceptionHandling((exceptions) ->
+                        exceptions.defaultAuthenticationEntryPointFor(
+                                new LoginUrlAuthenticationEntryPoint(Constants.SLASH_LOGIN),
+                                new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
+                        ));
+        return httpSecurity.build();
+    }
+
+    @Bean
+    @Order(2)
+    public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http)
+            throws Exception {
+        http
+                .authorizeHttpRequests((authorize) ->
+                    authorize.anyRequest().authenticated()
+                )
+                .formLogin(Customizer.withDefaults());
+
+        return http.build();
+    }
+
+    //An instance of com.nimbusds.jose.jwk.source.JWKSource for signing access tokens.
+    @Bean
+    public JWKSource<SecurityContext> jwkSource(){
+        KeyPair keyPair = generateRsaKey();
+        RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
+        RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
+        //RSAPublicKey publicKey = (RSAPublicKey) this.keyTools.loadPublicKey(Constants.KEYS_PUBLIC_KEY_KEY);
+        //RSAPrivateKey privateKey = (RSAPrivateKey) this.keyTools.loadPrivateKey(Constants.KEYS_PRIVATE_KEY_KEY);
+        RSAKey rsaKey = new RSAKey.Builder(publicKey)
+                .privateKey(privateKey)
+                .keyID(UUID.randomUUID().toString())
+                .build();
+        JWKSet jwkSet = new JWKSet(rsaKey);
+        return new ImmutableJWKSet<>(jwkSet);
+    }
+
+    //An instance of java.security.KeyPair with keys generated on startup used to create the JWKSource above.
+    private KeyPair generateRsaKey() {
+        KeyPair keyPair = null;
+        try{
+            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(Constants.RSA);
+            keyPairGenerator.initialize(2048);
+            keyPair = keyPairGenerator.generateKeyPair();
+        }catch(Exception exception){
+            exception.printStackTrace();
+        }
+        return keyPair;
+    }
+
+    //An instance of JwtDecoder for decoding signed access tokens.
+    @Bean
+    public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
+        return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
+    }
+
+    //An instance of AuthorizationServerSettings to configure Spring Authorization Server.
+    @Bean
+    public AuthorizationServerSettings authorizationServerSettings() {
+        return AuthorizationServerSettings.builder().build();
+    }
+
+    @Bean
+    public TokenSettings tokenSettings(){
+        return TokenSettings.builder()
+                .accessTokenFormat(OAuth2TokenFormat.SELF_CONTAINED)
+                .accessTokenTimeToLive(Duration.ofMinutes(60))
+                .build();
+    }
+
+    @Bean
+    public ClientSettings clientSettings(){
+        return ClientSettings.builder()
+                .requireAuthorizationConsent(false)
+                .build();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder(12);
+    }
+
+    @Bean
+    public AuthenticationProvider authenticationProvider(UserPrincipalDetailsService service){
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setPasswordEncoder(this.passwordEncoder());
+        provider.setUserDetailsService(service);
+        return provider;
+    }
+
+    @Bean
+    public OAuth2TokenCustomizer<JwtEncodingContext> jwtEncodingContext() {
+        return context -> {
+            Authentication authentication = context.getPrincipal();
+            if(authentication.getPrincipal() instanceof  UserPrincipal userPrincipal) {
+                OAuth2TokenType oauth2TokenType = context.getTokenType();
+                if(OAuth2TokenType.ACCESS_TOKEN.equals(oauth2TokenType)){
+                    JwtClaimsSet.Builder claims = context.getClaims();
+                    claims.claim(Constants.ID, userPrincipal.getUserAccount().getId());
+                    claims.claim(Constants.NAME, userPrincipal.getUserAccount().getName());
+                    claims.claim(Constants.EMAIL, userPrincipal.getUserAccount().getEmail());
+                    claims.claim(Constants.PROFILES, userPrincipal.getUserAccount().getRoles());
+                    claims.claim(Constants.REGISTRATION_DATE, userPrincipal.getUserAccount().getCreatedDate().format(this.formatter));
+                }
+            }
+        };
+    }
+}
