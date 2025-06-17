@@ -18,7 +18,6 @@ import java.util.UUID;
 @Entity(name = "user_account")
 @EntityListeners(AuditingEntityListener.class)
 @Data
-@ToString(exclude = {"addresses"})
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserAccount implements Serializable {

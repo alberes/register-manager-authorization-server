@@ -11,5 +11,4 @@ public interface UserAccountRepository extends JpaRepository<UserAccount, UUID> 
 
     public UserAccount findByEmail(String email);
 
-    public Page<UserAccount> findById(UUID id, PageRequest pageRequest);
 }

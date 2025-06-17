@@ -8,7 +8,6 @@ import com.nimbusds.jose.proc.SecurityContext;
 import io.github.alberes.register.manager.authorization.server.constants.Constants;
 import io.github.alberes.register.manager.authorization.server.domains.UserPrincipal;
 import io.github.alberes.register.manager.authorization.server.services.UserPrincipalDetailsService;
-import io.github.alberes.register.manager.authorization.server.utils.KeyTools;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -52,8 +51,6 @@ import java.util.UUID;
 @Slf4j
 public class SecurityAuthorizationServerConfiguration {
 
-    private final KeyTools keyTools;
-
     private final DateTimeFormatter formatter;
 
     //https://docs.spring.io/spring-authorization-server/reference/protocol-endpoints.html
@@ -95,8 +92,6 @@ public class SecurityAuthorizationServerConfiguration {
         KeyPair keyPair = generateRsaKey();
         RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
         RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
-        //RSAPublicKey publicKey = (RSAPublicKey) this.keyTools.loadPublicKey(Constants.KEYS_PUBLIC_KEY_KEY);
-        //RSAPrivateKey privateKey = (RSAPrivateKey) this.keyTools.loadPrivateKey(Constants.KEYS_PRIVATE_KEY_KEY);
         RSAKey rsaKey = new RSAKey.Builder(publicKey)
                 .privateKey(privateKey)
                 .keyID(UUID.randomUUID().toString())
