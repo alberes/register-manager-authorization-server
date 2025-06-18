@@ -1,0 +1,237 @@
+{
+	"info": {
+		"_postman_id": "a21677a0-c393-4c7e-bca4-935175f749e3",
+		"name": "register-manager-authorization-server",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "891104",
+		"_collection_link": "https://solar-station-361672.postman.co/workspace/cursos~ed905280-362f-4384-9722-3985fe33206e/collection/891104-a21677a0-c393-4c7e-bca4-935175f749e3?action=share&source=collection_link&creator=891104"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"item": [
+				{
+					"name": "CLIENT_CREDENTIALS",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "scope",
+									"value": "USER",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "my-client-secret",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "my-client-id",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "http://localhost:9090/oauth2/token",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "http://localhost:8081",
+									"type": "string"
+								},
+								{
+									"key": "tokenName",
+									"value": "RegisterManater",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AUTHORIZATION_CODE",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "redirect_uri",
+									"value": "http://localhost:8081",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "my-client-secret",
+									"type": "string"
+								},
+								{
+									"key": "scope",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "http://localhost:9090/oauth2/authorize",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "my-client-id",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "http://localhost:9090/oauth2/token",
+									"type": "string"
+								},
+								{
+									"key": "tokenName",
+									"value": "RegisterManater",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CLIENT_CREDENTIALS_MANUAL",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic bXktY2xpZW50LWlkOm15LWNsaWVudC1zZWNyZXQ=",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "USER",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:9090/oauth2/token",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"oauth2",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AUTHORIZATION_CODE_REFRESH_TOKEN",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "my-client-id",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "my-client-secret",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "refresh_token",
+									"type": "text"
+								},
+								{
+									"key": "refresh_token",
+									"value": "dLmqSf7CPOPpcARcp6IIcbNu2donrdH0IyAuaWqOipLQzgmIWiAUnNkH0h4p1IPj72J7XPfuG7t2I0-vqbJV4pfKKN7N2GzyxmNUvlqkwF1Ahrn3LlNqtbwIYeEhKXGf",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:9090/oauth2/token",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"oauth2",
+								"token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

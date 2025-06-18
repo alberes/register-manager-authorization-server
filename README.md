@@ -40,7 +40,8 @@ Funcionalidades
 * Dependencias: (Spring Security)[https://docs.spring.io/spring-security/reference/index.html],
 * Dependencias: (spring Oauth2 Authorization Server)[https://docs.spring.io/spring-authorization-server/reference/protocol-endpoints.html] * (JPA)[https://docs.spring.io/spring-data/jpa/reference/index.html],
 * (lombok)[https://projectlombok.org/features/],
-* (OpenApi)[https://springdoc.org/] * (actuator)[https://docs.spring.io/spring-boot/docs/2.0.x/actuator-api/html/] * JDK: 21
+* (OpenApi)[https://springdoc.org/] 
+* (actuator)[https://docs.spring.io/spring-boot/docs/2.0.x/actuator-api/html/] * JDK: 21
 * IDE: [Intellij](https://www.jetbrains.com/idea/)
 * Gerenciado de dependencias: [Apache Maven 3.9.9](https://maven.apache.org/)
 * Container: [Docker](https://www.docker.com/) e [Docker Hub](https://hub.docker.com/)
