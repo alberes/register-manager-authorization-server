@@ -29,8 +29,6 @@ logging:
 #Trace, debug, info, warn, error
 
 app:
-  session:
-    expirationtime: ${EXPIRATION_TIME:30}
-
-viacep:
-  url:  ${VIA_CEP_URL:https://viacep.com.br/ws/}
+  token:
+    accessTokenExpiration: ${ACCESS_TOKEN_EXPIRATION:30}
+    refreshTokenExpiration: ${REFRESH_TOKEN_EXPIRATION:60}

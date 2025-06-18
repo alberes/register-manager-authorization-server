@@ -41,8 +41,9 @@ public class AuthorizarionRegisteredClientRepository implements RegisteredClient
                 .redirectUri(client.getRedirectURI())
                 .scope(client.getScope())
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)//Only to AUTHORIZATION_CODE
                 .tokenSettings(tokenSettings)
                 .clientSettings(clientSettings)
                 .build();

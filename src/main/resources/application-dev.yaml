@@ -25,5 +25,10 @@ logging:
   file:
     name: register-manager-authorization-server.log
   level:
-    root: debug
+    root: warn
 #Trace, debug, info, warn, error
+
+app:
+  token:
+    accessTokenExpiration: 30
+    refreshTokenExpiration: 60

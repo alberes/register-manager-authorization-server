@@ -10,6 +10,7 @@ import io.github.alberes.register.manager.authorization.server.domains.UserPrinc
 import io.github.alberes.register.manager.authorization.server.services.UserPrincipalDetailsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -19,6 +20,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -53,6 +55,12 @@ public class SecurityAuthorizationServerConfiguration {
 
     private final DateTimeFormatter formatter;
 
+    @Value("${app.token.accessTokenExpiration}")
+    private int accessTokenExpiration;
+
+    @Value("${app.token.refreshTokenExpiration}")
+    private int refreshTokenExpiration;
+
     //https://docs.spring.io/spring-authorization-server/reference/protocol-endpoints.html
     @Bean
     @Order(1)
@@ -77,11 +85,10 @@ public class SecurityAuthorizationServerConfiguration {
     @Order(2)
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http)
             throws Exception {
-        http
-                .authorizeHttpRequests((authorize) ->
-                    authorize.anyRequest().authenticated()
-                )
-                .formLogin(Customizer.withDefaults());
+        http.authorizeHttpRequests((authorize) ->
+                authorize.anyRequest().authenticated()
+            )
+            .formLogin(Customizer.withDefaults());
 
         return http.build();
     }
@@ -129,7 +136,8 @@ public class SecurityAuthorizationServerConfiguration {
     public TokenSettings tokenSettings(){
         return TokenSettings.builder()
                 .accessTokenFormat(OAuth2TokenFormat.SELF_CONTAINED)
-                .accessTokenTimeToLive(Duration.ofMinutes(60))
+                .accessTokenTimeToLive(Duration.ofMinutes(this.accessTokenExpiration))
+                .refreshTokenTimeToLive(Duration.ofMinutes(this.refreshTokenExpiration))
                 .build();
     }
 
@@ -169,5 +177,12 @@ public class SecurityAuthorizationServerConfiguration {
                 }
             }
         };
+    }
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer(){
+        return web -> web.ignoring().requestMatchers(
+                Constants.SWAGGERS.toArray(new String[Constants.SWAGGERS.size()])
+        );
     }
 }

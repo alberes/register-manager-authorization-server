@@ -23,16 +23,16 @@ public class Client {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "client_id")
+    @Column(name = "client_id", nullable = false, unique = true)
     private String clientId;
 
-    @Column(name = "client_secret")
+    @Column(name = "client_secret", nullable = false)
     private String clientSecret;
 
-    @Column(name = "redirect_uri")
+    @Column(name = "redirect_uri", nullable = false)
     private String redirectURI;
 
-    @Column(name = "scope")
+    @Column(name = "scope", nullable = false)
     private String scope;
 
     @CreatedDate
