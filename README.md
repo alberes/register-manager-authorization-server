@@ -60,10 +60,20 @@ Funcionalidades
 4. Tempo de sessão está configurado para 60 minutos
 
 Um opção é criar um container docker com a imagem do Postgres, abaixo um exemplo que configurar usuário, senha e cria o banco de dados.  
-``` docker run --name postgresdb -p 5432:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES=postgres -e POSTGRES_DB=register_manager -d postgres:16.3 ``` 4. Executar o projeto
+```
+docker run --name postgresdb -p 5432:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES=postgres -e POSTGRES_DB=register_manager -d postgres:16.3
+```
+4. Executar o projeto
 - Abrir o terminal na raiz do projeto [SUB_DIRETORIOS]/register-manager-authorization-server e exeuctar o comando abaixo para gerar o pacote.  
-  ``` mvn -DskipTests=true clean package ``` - No termial entrar no diretório [SUB_DIRETORIOS]/register-manager-authorization-server/target  
-  ``` java -jar register-manager-authorization-server-0.0.1-SNAPSHOT.jar ``` A aplicação subirá na porta 9090
+```
+mvn -DskipTests=true clean package
+```
+- No termial entrar no diretório [SUB_DIRETORIOS]/register-manager-authorization-server/target
+```
+java -jar register-manager-authorization-server-0.0.1-SNAPSHOT.jar
+```
+
+A aplicação subirá na porta 9090
 
 ### Testes
 1. Carga inicial:

@@ -27,6 +27,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
+import org.springframework.security.oauth2.server.authorization.authentication.OAuth2ClientAuthenticationToken;
+import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
@@ -175,6 +177,10 @@ public class SecurityAuthorizationServerConfiguration {
                     claims.claim(Constants.PROFILES, userPrincipal.getUserAccount().getRoles());
                     claims.claim(Constants.REGISTRATION_DATE, userPrincipal.getUserAccount().getCreatedDate().format(this.formatter));
                 }
+            }else if(authentication instanceof OAuth2ClientAuthenticationToken authorizationToken){
+                RegisteredClient registeredClient = authorizationToken.getRegisteredClient();
+                JwtClaimsSet.Builder claims = context.getClaims();
+                claims.claim(Constants.ID, registeredClient.getId());
             }
         };
     }
