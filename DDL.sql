@@ -25,8 +25,15 @@ CREATE TABLE user_account_role(
 	ROLES           VARCHAR(255)
 );
 
+create table user_account_scope (
+    user_account_id uuid not null,
+    scopes varchar(255)
+);
+
 ALTER TABLE IF exists client ADD CONSTRAINT client_client_id UNIQUE (client_id);
 
 ALTER TABLE IF exists user_account ADD CONSTRAINT user_account_email UNIQUE (email);
 
 ALTER TABLE IF exists user_account_role ADD CONSTRAINT fk_user_account_id FOREIGN KEY (user_account_id) REFERENCES user_account;
+
+ALTER TABLE IF exists user_account_scope ADD CONSTRAINT fk_user_account_id FOREIGN KEY (user_account_id) REFERENCES user_account;

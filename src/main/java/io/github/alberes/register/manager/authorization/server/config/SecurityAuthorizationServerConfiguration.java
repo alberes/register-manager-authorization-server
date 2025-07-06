@@ -174,8 +174,9 @@ public class SecurityAuthorizationServerConfiguration {
                     claims.claim(Constants.ID, userPrincipal.getUserAccount().getId());
                     claims.claim(Constants.NAME, userPrincipal.getUserAccount().getName());
                     claims.claim(Constants.EMAIL, userPrincipal.getUserAccount().getEmail());
-                    claims.claim(Constants.PROFILES, userPrincipal.getUserAccount().getRoles());
-                    claims.claim(Constants.REGISTRATION_DATE, userPrincipal.getUserAccount().getCreatedDate().format(this.formatter));
+                    claims.claim(Constants.REGISTRATION_DATE, userPrincipal.getUserAccount().getCreatedDate()
+                            .format(this.formatter));
+                    claims.claim(Constants.SCOPE, userPrincipal.getUserAccount().getScopes());
                 }
             }else if(authentication instanceof OAuth2ClientAuthenticationToken authorizationToken){
                 RegisteredClient registeredClient = authorizationToken.getRegisteredClient();

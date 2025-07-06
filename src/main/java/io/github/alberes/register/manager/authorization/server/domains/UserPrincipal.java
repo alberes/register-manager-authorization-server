@@ -16,9 +16,12 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.userAccount.getRoles()
+        return this.userAccount.getScopes()
                 .stream().map(role -> new SimpleGrantedAuthority(role))
                 .toList();
+        /*return this.userAccount.getRoles()
+                .stream().map(role -> new SimpleGrantedAuthority(role))
+                .toList();*/
     }
 
     @Override
