@@ -65,7 +65,7 @@ Funcionalidades
     * [4DEV](https://www.4devs.com.br/)
 
 ### Como Executar
-1. Clone o repositório: git clone https://github.com/alberes/register-manager-authorization-server
+1. Clone o repositório: git clone [register-manager-authorization-server](https://github.com/alberes/register-manager-authorization-server)
 2. Configure o banco de dados:
 - Banco de dados: register_manager
 - Tabelas: client, user_account, user_account_role    
