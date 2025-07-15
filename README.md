@@ -211,8 +211,8 @@ docker rmi register-manager-authorization-server:1.0.0
 ```
 docker rmi postgres:16.3
 ```
-   ### Docker Compose para gerenciar os containeres
-- Com a imagem da aplicação [register-manager-authorization-server](#criar-register-manager-authorization-server) é só executar o comando abaixo:
+### Docker Compose para gerenciar os containeres
+- Com as imagens da aplicação [register-manager-authorization-server](https://github.com/alberes/register-manager-authorization-server), [register-manager-resource-server](#criar-register-manager-resource-server) e [register-manager-frontend-client](https://github.com/alberes/register-manager-frontend-client) é só executar o comando abaixo:
 ```     
 docker-compose up -d
 ```
