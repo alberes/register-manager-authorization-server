@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: ${DATASOURCE_URL:jdbc:postgresql://postgresdb:5432/register_manager_authorization_server}
+    url: ${DATASOURCE_URL:jdbc:postgresql://postgresdb:5432/register_manager}
     username: ${DATASOURCE_USERNAME:postgres}
     password: ${DATASOURCE_PASSWORD:postgres}
   jpa:

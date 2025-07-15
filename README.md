@@ -152,7 +152,7 @@ AuthorizationServer-->>Client: JWT access_token
 
 ### Docker
 
-1. Montando um ambiente Docker
+1. Montando um ambiente Docker (alterar a variável de ambiente active para docker no arquivo application.yaml)
    <a id="criar-register-manager-authorization-server"></a>
 - Criando uma imagem da aplicação
 ```
@@ -162,7 +162,7 @@ docker build --tag register-manager-authorization-server:1.0.0 .
 ```
 docker network create register-manager-authorization-network
 ```
-- Subindo um container Docker com banco de dados Postgres
+- Subindo um container Docker com banco de dados Postgres (comunicação entre containeres precisam da configuração de --network NOME_DA_REDE_CRAIDA_NO_DOCKER)
 ```
 docker run --name postgresdb -p 5432:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES=postgres -e POSTGRES_DB=register_manager --network register-manager-authorization-network -d postgres:16.3
 ```

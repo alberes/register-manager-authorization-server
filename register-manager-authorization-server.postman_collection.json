@@ -79,17 +79,7 @@
 							"oauth2": [
 								{
 									"key": "redirect_uri",
-									"value": "http://localhost:8081",
-									"type": "string"
-								},
-								{
-									"key": "clientSecret",
-									"value": "my-client-secret",
-									"type": "string"
-								},
-								{
-									"key": "scope",
-									"value": "",
+									"value": "http://127.0.0.1:8080/login/oauth2/code/register-manager-frontend-client-oidc",
 									"type": "string"
 								},
 								{
@@ -98,18 +88,28 @@
 									"type": "string"
 								},
 								{
-									"key": "grant_type",
-									"value": "authorization_code",
+									"key": "clientSecret",
+									"value": "admin-client-secret",
 									"type": "string"
 								},
 								{
 									"key": "clientId",
-									"value": "my-client-id",
+									"value": "admin-client-id",
 									"type": "string"
 								},
 								{
 									"key": "accessTokenUrl",
 									"value": "http://localhost:9090/oauth2/token",
+									"type": "string"
+								},
+								{
+									"key": "scope",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
 									"type": "string"
 								},
 								{
@@ -212,6 +212,50 @@
 								{
 									"key": "refresh_token",
 									"value": "dLmqSf7CPOPpcARcp6IIcbNu2donrdH0IyAuaWqOipLQzgmIWiAUnNkH0h4p1IPj72J7XPfuG7t2I0-vqbJV4pfKKN7N2GzyxmNUvlqkwF1Ahrn3LlNqtbwIYeEhKXGf",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:9090/oauth2/token",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"oauth2",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CLIENT_CREDENTIALS_MANUAL_ADMIN",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic YWRtaW4tY2xpZW50LWlkOmFkbWluLWNsaWVudC1zZWNyZXQ=",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "ADMIN",
 									"type": "text"
 								}
 							]
