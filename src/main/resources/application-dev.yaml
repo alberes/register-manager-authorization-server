@@ -25,7 +25,7 @@ logging:
   file:
     name: register-manager-authorization-server.log
   level:
-    root: info
+    root: debug
     #org.springframework.web: debug
     #org.springframework.security: debug
     #org.springframework.security.oauth2: debug

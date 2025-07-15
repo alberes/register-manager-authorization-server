@@ -1,6 +1,3 @@
-
-
-
 # Projeto: Servidor de autorização
 Este projeto é responsável por autorizar e gerar tokens Client Credencials e Autorization Code.
 
@@ -34,19 +31,38 @@ Funcionalidades
   ALTER TABLE IF exists user_account ADD CONSTRAINT user_account_email UNIQUE (email);
 
 ### Tecnologias Utilizadas
-* Linguagem: Java e SQL
+* Linguagem:
+    * Java e SQL
 * Banco de Dados: [Postgres](https://www.postgresql.org/)
-* Frameworks: [Spring Boot 3.5.0](https://start.spring.io/)
-* Dependencias: (Spring Security)[https://docs.spring.io/spring-security/reference/index.html],
-* Dependencias: (spring Oauth2 Authorization Server)[https://docs.spring.io/spring-authorization-server/reference/protocol-endpoints.html] * (JPA)[https://docs.spring.io/spring-data/jpa/reference/index.html],
-* (lombok)[https://projectlombok.org/features/],
-* (OpenApi)[https://springdoc.org/] 
-* (actuator)[https://docs.spring.io/spring-boot/docs/2.0.x/actuator-api/html/] * JDK: 21
-* IDE: [Intellij](https://www.jetbrains.com/idea/)
-* Gerenciado de dependencias: [Apache Maven 3.9.9](https://maven.apache.org/)
-* Container: [Docker](https://www.docker.com/) e [Docker Hub](https://hub.docker.com/)
-* Ferramentas: [Postman](https://www.postman.com/) [Google Chrome    
-  Versão 136.0.7103.93 (Versão oficial) 64 bits](https://www.google.com/intl/pt-BR/chrome/), [PGAdmin](https://www.pgadmin.org/), [Beekeeper](https://www.beekeeperstudio.io/)
+    * Frameworks:
+        * [Spring Boot 3.5.0](https://start.spring.io/)
+    * Dependencias:
+        * [Spring Security](https://docs.spring.io/spring-security/reference/index.html)
+        * [spring Oauth2 Authorization Server](https://docs.spring.io/spring-authorization-server/reference/protocol-endpoints.html)
+        * [JPA](https://docs.spring.io/spring-data/jpa/reference/index.html)
+        * [Lombok](https://projectlombok.org/features/)
+        * [actuator](https://docs.spring.io/spring-boot/docs/2.0.x/actuator-api/html/)
+* JDK:
+    * versão 17
+* IDE:
+    * [Intellij](https://www.jetbrains.com/idea/)
+* Gerenciado de dependencias:
+    * [Apache Maven 3.9.9](https://maven.apache.org/)
+* Container:
+    * [Docker](https://www.docker.com/)
+    * [Docker Hub](https://hub.docker.com/)
+* Ferramentas:
+    * [Postman](https://www.postman.com/)
+    * [Google Chrome Versão 136.0.7103.93 Versão oficial 64 bits](https://www.google.com/intl/pt-BR/chrome/)
+    * [PGAdmin](https://www.pgadmin.org/)
+    * [Beekeeper](https://www.beekeeperstudio.io/)
+* Ferramentas auxiliares:
+    * [Markdown](https://stackedit.io/app#)
+    * [Criar diagramas](https://docs.github.com/pt/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams)
+    * [JWT IO](https://jwt.io/)
+    * [Criptografia online](https://bcrypt-generator.com/)
+    * [Base 64](https://www.base64encode.org/)
+    * [4DEV](https://www.4devs.com.br/)
 
 ### Como Executar
 1. Clone o repositório: git clone https://github.com/alberes/register-manager-authorization-server
@@ -80,7 +96,14 @@ A aplicação subirá na porta 9090
     - Usar o arquivo DML.sql
         - [SUB_DIRETORIOS]/register-manager-authorization-server/DML.sql
 2. Observabilidade e métricas
-    - (Monitoramento)[http://localhost:9091/actuator] - (Log)[http://localhost:9091/actuator/logfile] - (Metricas)[http://localhost:9091/actuator/metrics] - (DataSource)[http://localhost:9091/actuator/metrics/hikaricp.connections.active] - (Memória)[http://localhost:9091/actuator/metrics/jvm.buffer.memory.used] - (CPU)[http://localhost:9091/actuator/metrics/process.cpu.usage] - (Autorzação)[http://localhost:9091/actuator/metrics/spring.security.authorizations.active] - (Sessões)[tomcat.sessions.active.current]
+    - [Monitoramento](http://localhost:9091/actuator)
+    - [Log](http://localhost:9091/actuator/logfile)
+    - [Metricas](http://localhost:9091/actuator/metrics)
+    - [DataSource](http://localhost:9091/actuator/metrics/hikaricp.connections.active)
+    - [Memória](http://localhost:9091/actuator/metrics/jvm.buffer.memory.used)
+    - [CPU](http://localhost:9091/actuator/metrics/process.cpu.usage)
+    - [Autorzação](http://localhost:9091/actuator/metrics/spring.security.authorizations.active)
+    - [Sessões](tomcat.sessions.active.current)
 3. Testes usando Postman
     - Localize a collection que se encontra no diretório [SUB_DIRETORIOS]/register-manager-authorization-server/register-manager-authorization-server.postman_collection
     - Importar no Postman
@@ -92,11 +115,12 @@ A aplicação subirá na porta 9090
 ### Autenticações
 
 1 - Client Credencials (client-id: my-client-id, client-secret: my-client-secret e scope: USER)
-
+```
 curl --location 'http://localhost:9090/oauth2/token' \    --header 'Authorization: Basic bXktY2xpZW50LWlkOm15LWNsaWVudC1zZWNyZXQ=' \      
 --header 'Content-Type: application/x-www-form-urlencoded' \      
 --data-urlencode 'grant_type=client_credentials' \      
 --data-urlencode 'scope=USER'
+```
 
 ```mermaid sequenceDiagram  
 Client->> AuthorizationServer: POST http://localhost:9090/oauth2/token AuthorizationServer->>RegisteredClientRepository: findByClientId(clientId)  
@@ -130,35 +154,63 @@ AuthorizationServer-->>Client: JWT access_token
 
 1. Montando um ambiente Docker
    <a id="criar-register-manager-authorization-server"></a>
-    - Criando uma imagem da aplicação
-      docker build --tag register-manager-authorization-server:1.0.0 .
-    - Criando uma rede para comunicação entre os containeres
-      docker network create register-manager-authorization-network
-    - Subindo um container Docker com banco de dados Postgres
-      docker run --name postgresdb -p 5432:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES=postgres -e POSTGRES_DB=register_manager --network register-manager-authorization-network -d postgres:16.3
-    - Subindo um container Docker da aplicação register-manager-authorization-server
-      docker run --name register-manager-authorization-server -p 9090:9090 -p 9091:9091 --network register-manager-authorization-network -d register-manager-authorization-server:1.0.0
-        - ou use as veriáveis de ambiente
-          docker run --name register-manager-authorization-server -p 9090:9090 -p 9091:9091 --network register-manager-authorization-network -e DATASOURCE_URL=jdbc:postgresql://postgresdb:5432/register_manager -e DATASOURCE_USERNAME=postgres -e DATASOURCE_PASSWORD=postgres -e SHOW_SQL=true -e DDL_AUTO=update -e FORMAT_SQL=true -e APP_PORT=9090 -e MONITORING_PORT=9091 -e MONITORING_LIST=* -e LOG_NAME=register-manager-authorization-server.log -e LOG_LEVEL=warn -e ACCESS_TOKEN_EXPIRATION=30 -e REFRESH_TOKEN_EXPIRATION=60 -d register-manager-authorization-server:1.0.0
-    - Listando os containeres que estão no ar
-      docker ps
-    - Listando as imagens
-      docker images
-    - Parando o contaner
-      docker stop register-manager-authorization-server
-    - Subindo um container já existente
-      docker start register-manager-authorization-server
+- Criando uma imagem da aplicação
+```
+docker build --tag register-manager-authorization-server:1.0.0 .
+```
+- Criando uma rede para comunicação entre os containeres
+```
+docker network create register-manager-authorization-network
+```
+- Subindo um container Docker com banco de dados Postgres
+```
+docker run --name postgresdb -p 5432:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES=postgres -e POSTGRES_DB=register_manager --network register-manager-authorization-network -d postgres:16.3
+```
+- Subindo um container Docker da aplicação register-manager-authorization-server
+```
+docker run --name register-manager-authorization-server -p 9090:9090 -p 9091:9091 --network register-manager-authorization-network -d register-manager-authorization-server:1.0.0
+```
+- ou use as veriáveis de ambiente
+```
+docker run --name register-manager-authorization-server -p 9090:9090 -p 9091:9091 --network register-manager-authorization-network -e DATASOURCE_URL=jdbc:postgresql://postgresdb:5432/register_manager -e DATASOURCE_USERNAME=postgres -e DATASOURCE_PASSWORD=postgres -e SHOW_SQL=true -e DDL_AUTO=update -e FORMAT_SQL=true -e APP_PORT=9090 -e MONITORING_PORT=9091 -e MONITORING_LIST=* -e LOG_NAME=register-manager-authorization-server.log -e LOG_LEVEL=warn -e ACCESS_TOKEN_EXPIRATION=30 -e REFRESH_TOKEN_EXPIRATION=60 -d register-manager-authorization-server:1.0.0
+```
+- Listando os containeres que estão no ar
+```
+docker ps
+```
+- Listando as imagens
+```
+docker images
+```
+- Parando o contaner
+```
+docker stop register-manager-authorization-server
+```
+- Subindo um container já existente
+```
+docker start register-manager-authorization-server
+```
 3. Demontando o ambiente (Pare os containeres da aplicação e banco de dados antes de executar os comandos abaixo)
-    - Removendo a aplicação
-      docker rm register-manager-authorization-server
-    - Removendo o banco de dados
-      docker rm postgresdb
-    - Removendo a rede
-      docker network rm register-manager-authorization-network
-    - Removendo a imagem da aplicação
-      docker rmi register-manager-authorization-server:1.0.0
-    - Removendo a imagem do banco de dados
-      docker rmi postgres:16.3
+- Removendo a aplicação
+```
+docker rm register-manager-authorization-server
+```
+- Removendo o banco de dados
+```
+docker rm postgresdb
+```
+- Removendo a rede
+```
+docker network rm register-manager-authorization-network
+```
+- Removendo a imagem da aplicação
+```
+docker rmi register-manager-authorization-server:1.0.0
+```
+- Removendo a imagem do banco de dados
+```
+docker rmi postgres:16.3
+```
    ### Docker Compose para gerenciar os containeres
     - Com a imagem da aplicação [register-manager-authorization-server](#criar-register-manager-authorization-server) é só executar o comando abaixo:
       docker-compose up -d
