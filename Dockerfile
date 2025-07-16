@@ -15,6 +15,7 @@ COPY --from=build ./build/target/*.jar ./register-manager-authorization-server.j
 expose 9090
 expose 9091
 
+ENV SERVER_ISSUER='http://register-manager-authorization-server:9090'
 ENV DATASOURCE_URL='jdbc:postgresql://postgresdb:5432/register_manager'
 ENV DATASOURCE_USERNAME='postgres'
 ENV DATASOURCE_PASSWORD='postgres'

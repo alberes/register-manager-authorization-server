@@ -29,6 +29,9 @@ logging:
 #Trace, debug, info, warn, error
 
 app:
+  server:
+    #Ambiente docker precisa configurar o nome do servico
+    issuer: ${SERVER_ISSUER:http://register-manager-authorization-server:9090}
   token:
     accessTokenExpiration: ${ACCESS_TOKEN_EXPIRATION:30}
     refreshTokenExpiration: ${REFRESH_TOKEN_EXPIRATION:60}

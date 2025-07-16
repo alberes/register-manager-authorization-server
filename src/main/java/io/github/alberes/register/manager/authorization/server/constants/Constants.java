@@ -13,6 +13,7 @@ public interface Constants {
     public static final String SLASH_LOGIN = "/login";
     public static final String RSA = "RSA";
     public static final String SCOPE = "scope";
+    public static final String EMPTY = "";
     public static final Set<String> SWAGGERS = Set.of("/v2/api-docs/**", "/v3/api-docs/**", "/swagger-resources/**",
             "/swagger-ui.html", "/swagger-ui/**", "/webjars/**", "/actuator/**");
 }

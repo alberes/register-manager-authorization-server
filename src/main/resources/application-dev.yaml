@@ -33,6 +33,9 @@ logging:
 #Trace, debug, info, warn, error
 
 app:
+  server:
+    #Ambiente docker precisa configurar o nome do servico
+    issuer:
   token:
     accessTokenExpiration: 30
     refreshTokenExpiration: 60

@@ -162,7 +162,7 @@ docker build --tag register-manager-authorization-server:1.0.0 .
 ```
 docker network create register-manager-authorization-network
 ```
-- Subindo um container Docker com banco de dados Postgres (comunicação entre containeres precisam da configuração de --network NOME_DA_REDE_CRAIDA_NO_DOCKER)
+- Subindo um container Docker com banco de dados Postgres (comunicação entre containeres precisam da configuração de --network NOME_DA_REDE_CRIADA_NO_DOCKER)
 ```
 docker run --name postgresdb -p 5432:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES=postgres -e POSTGRES_DB=register_manager --network register-manager-authorization-network -d postgres:16.3
 ```
@@ -172,7 +172,7 @@ docker run --name register-manager-authorization-server -p 9090:9090 -p 9091:909
 ```
 - ou use as veriáveis de ambiente
 ```
-docker run --name register-manager-authorization-server -p 9090:9090 -p 9091:9091 --network register-manager-authorization-network -e DATASOURCE_URL=jdbc:postgresql://postgresdb:5432/register_manager -e DATASOURCE_USERNAME=postgres -e DATASOURCE_PASSWORD=postgres -e SHOW_SQL=true -e DDL_AUTO=update -e FORMAT_SQL=true -e APP_PORT=9090 -e MONITORING_PORT=9091 -e MONITORING_LIST=* -e LOG_NAME=register-manager-authorization-server.log -e LOG_LEVEL=warn -e ACCESS_TOKEN_EXPIRATION=30 -e REFRESH_TOKEN_EXPIRATION=60 -d register-manager-authorization-server:1.0.0
+docker run --name register-manager-authorization-server -p 9090:9090 -p 9091:9091 --network register-manager-authorization-network -e SERVER_ISSUER=http://register-manager-authorization-server:9090 -e DATASOURCE_URL=jdbc:postgresql://postgresdb:5432/register_manager -e DATASOURCE_USERNAME=postgres -e DATASOURCE_PASSWORD=postgres -e SHOW_SQL=true -e DDL_AUTO=update -e FORMAT_SQL=true -e APP_PORT=9090 -e MONITORING_PORT=9091 -e MONITORING_LIST=* -e LOG_NAME=register-manager-authorization-server.log -e LOG_LEVEL=warn -e ACCESS_TOKEN_EXPIRATION=30 -e REFRESH_TOKEN_EXPIRATION=60 -d register-manager-authorization-server:1.0.0
 ```
 - Listando os containeres que estão no ar
 ```

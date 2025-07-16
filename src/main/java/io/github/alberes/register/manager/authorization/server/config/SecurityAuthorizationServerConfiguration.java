@@ -57,6 +57,9 @@ public class SecurityAuthorizationServerConfiguration {
 
     private final DateTimeFormatter formatter;
 
+    @Value("${app.server.issuer}")
+    private String issuer;
+
     @Value("${app.token.accessTokenExpiration}")
     private int accessTokenExpiration;
 
@@ -131,7 +134,15 @@ public class SecurityAuthorizationServerConfiguration {
     //An instance of AuthorizationServerSettings to configure Spring Authorization Server.
     @Bean
     public AuthorizationServerSettings authorizationServerSettings() {
-        return AuthorizationServerSettings.builder().build();
+        if(Constants.EMPTY.equals(this.issuer.trim())){
+            System.out.println("ISSUER EMPTY");
+            return AuthorizationServerSettings.builder().build();
+        }else {
+            System.out.println("ISSUER " + this.issuer);
+            return AuthorizationServerSettings.builder()
+                    .issuer(this.issuer)
+                    .build();
+        }
     }
 
     @Bean
