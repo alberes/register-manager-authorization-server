@@ -135,10 +135,8 @@ public class SecurityAuthorizationServerConfiguration {
     @Bean
     public AuthorizationServerSettings authorizationServerSettings() {
         if(Constants.EMPTY.equals(this.issuer.trim())){
-            System.out.println("ISSUER EMPTY");
             return AuthorizationServerSettings.builder().build();
         }else {
-            System.out.println("ISSUER " + this.issuer);
             return AuthorizationServerSettings.builder()
                     .issuer(this.issuer)
                     .build();
